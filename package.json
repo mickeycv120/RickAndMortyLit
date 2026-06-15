@@ -1,0 +1,17 @@
+{
+  "name": "rick-and-morty-lit",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^8.0.16"
+  },
+  "dependencies": {
+    "lit-element": "^4.2.2"
+  }
+}
