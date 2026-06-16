@@ -44,14 +44,6 @@ export const characterCardStyles = css`
         left: 0;
         right: 0;
         height: 3px;
-        background: linear-gradient(
-            90deg,
-            transparent,
-            #97ce4c 20%,
-            #44d62c 50%,
-            #b388ff 80%,
-            transparent
-        );
         z-index: 2;
     }
 

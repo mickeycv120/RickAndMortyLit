@@ -8,6 +8,7 @@ export class AppShell extends LitElement {
                 display: block;
                 padding-left: 20px;
                 padding-right: 20px;
+                padding-bottom: 20px;
             }
         `
     ];
