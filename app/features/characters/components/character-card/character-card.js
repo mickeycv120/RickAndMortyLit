@@ -1,13 +1,8 @@
-import { LitElement, html, css } from 'lit';
+import { LitElement, html } from 'lit-element';
+import { characterCardStyles } from './character-card.styles.css.js';
 
 export class CharacterCard extends LitElement {
-    static styles = [
-        css`
-            :host {
-                display: block;
-            }
-        `
-    ];
+    static styles = [characterCardStyles];
 
     static properties = {
         character: { type: Object }
@@ -40,7 +35,7 @@ export class CharacterCard extends LitElement {
         return html`
         <article>
             <img src="${image}" alt="${name}" loading="lazy" />
-            <div>
+            <div class="content">
                 <h3>${name}</h3>  
                 <p>
                     <span>${species}</span>
