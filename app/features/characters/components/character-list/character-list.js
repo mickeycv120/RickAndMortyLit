@@ -1,4 +1,5 @@
 import { LitElement, html } from 'lit-element';
+import { mapCharacter } from '../../mappers/character.mapper.js';
 import { getCharacters } from '../../services/character.service';
 import '../character-card/character-card.js';
 import { characterListStyles } from './character-list.styles.css.js';
@@ -17,7 +18,7 @@ export class CharacterList extends LitElement {
 
     async firstUpdated() {
         const response = await getCharacters();
-        this.characters = response.results ?? [];
+        this.characters = (response.results ?? []).map(mapCharacter);
     }
 
     render() {
