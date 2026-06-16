@@ -11,7 +11,6 @@ export class AppShell extends LitElement {
 
     render() {
         return html`
-        <h1>App Shell</h1>
         `;
     }
 }
