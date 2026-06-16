@@ -6,6 +6,8 @@ export class AppShell extends LitElement {
         css`
             :host {
                 display: block;
+                padding-left: 20px;
+                padding-right: 20px;
             }
         `
     ];

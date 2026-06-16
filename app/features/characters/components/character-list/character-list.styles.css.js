@@ -10,6 +10,12 @@ export const characterListStyles = css`
         width: 100%;
         row-gap: 1.5rem;
         column-gap: 1.5rem;
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        align-items: stretch;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    }
+
+    .character-list > character-card {
+        display: block;
+        height: 100%;
     }
 `;

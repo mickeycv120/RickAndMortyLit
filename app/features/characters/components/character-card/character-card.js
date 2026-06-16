@@ -34,14 +34,16 @@ export class CharacterCard extends LitElement {
 
         return html`
         <article>
-            <img src="${image}" alt="${name}" loading="lazy" />
+            <div class="media">
+                <img src="${image}" alt="${name}" loading="lazy" />
+            </div>
             <div class="content">
-                <h3>${name}</h3>  
-                <p>
+                <h3>${name}</h3>
+                <p class="meta">
                     <span>${species}</span>
-                    <span>${origin}</span>
+                    <span>${origin?.name ?? origin}</span>
                 </p>
-                <span style="color: ${this.statusColor};">${status}</span>
+                <span class="status" style="color: ${this.statusColor};">${status}</span>
             </div>
         </article>
         `;
