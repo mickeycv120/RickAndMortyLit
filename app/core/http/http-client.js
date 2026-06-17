@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { MESSAGES } from '../constants/app.constants.js';
 import { RICK_AND_MORTY_API_URL } from '../config/api.config.js';
 
 export const httpClient = axios.create({
@@ -11,7 +12,7 @@ export const httpClient = axios.create({
 httpClient.interceptors.response.use(
     (response) => response.data,
     (error) => {
-        console.error('Error fetching data:', error);
+        console.error(MESSAGES.FETCH_ERROR, error);
         return Promise.reject(error);
     }
 );
