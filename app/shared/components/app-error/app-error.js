@@ -19,6 +19,7 @@ export class AppError extends LitElement {
 
     render() {
         return html`
+            <img src="/assets/Error.png" alt="" aria-hidden="true" />
             <p>${this.message}</p>
             <button @click=${this._handleRetry}>Reintentar</button>
         `;

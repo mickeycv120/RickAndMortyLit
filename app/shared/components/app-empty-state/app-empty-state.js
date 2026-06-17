@@ -6,15 +6,20 @@ export class AppEmptyState extends LitElement {
 
     static properties = {
         message: { type: String },
+        image: { type: String },
     };
 
     constructor() {
         super();
         this.message = '';
+        this.image = '';
     }
 
     render() {
-        return html`<p role="status">${this.message}</p>`;
+        return html`
+            ${this.image ? html`<img src="${this.image}" alt="" aria-hidden="true" />` : ''}
+            <p role="status">${this.message}</p>
+        `;
     }
 }
 

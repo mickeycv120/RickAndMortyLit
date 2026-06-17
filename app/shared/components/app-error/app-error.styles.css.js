@@ -14,6 +14,13 @@ export const appErrorStyles = css`
         text-align: center;
     }
 
+    img {
+        width: 180px;
+        height: auto;
+        opacity: 0.9;
+        filter: drop-shadow(0 0 16px rgba(255, 107, 125, 0.25));
+    }
+
     p {
         margin: 0;
         line-height: 1.5;

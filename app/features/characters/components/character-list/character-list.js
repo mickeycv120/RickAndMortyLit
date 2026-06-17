@@ -194,7 +194,12 @@ export class CharacterList extends LitElement {
         }
 
         if (!this.characters.length) {
-            return html`<app-empty-state .message=${this._getEmptyMessage()}></app-empty-state>`;
+            return html`
+                <app-empty-state
+                    .message=${this._getEmptyMessage()}
+                    .image=${this.showFavoritesOnly ? '/assets/empty.png' : ''}
+                ></app-empty-state>
+            `;
         }
 
         return this.characters.map(
