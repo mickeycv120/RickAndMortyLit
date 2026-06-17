@@ -4,9 +4,11 @@ import { getCharacters, getCharactersByIds } from '../../services/character.serv
 import { PAGINATION } from '../../../../core/constants/app.constants.js';
 import { favoritesStore, FAVORITES_CHANGED_EVENT } from '../../../../core/stores/favorites.store.js';
 import '../character-card/character-card.js';
-import '../character-card-skeleton/character-card-skeleton.js';
 import '../character-pagination/character-pagination.js';
 import '../character-modal/character-modal.js';
+import '../../../../shared/components/app-loader/app-loader.js';
+import '../../../../shared/components/app-error/app-error.js';
+import '../../../../shared/components/app-empty-state/app-empty-state.js';
 import { characterListStyles } from './character-list.styles.css.js';
 
 export class CharacterList extends LitElement {
@@ -83,6 +85,12 @@ export class CharacterList extends LitElement {
 
     _getSkeletonCount() {
         return this.characters.length || PAGINATION.DEFAULT_PAGE_SIZE;
+    }
+
+    _getEmptyMessage() {
+        return this.showFavoritesOnly
+            ? 'Aún no tienes personajes favoritos. ¡Marca alguno con el corazón!'
+            : `No se encontraron personajes para "${this.searchQuery}".`;
     }
 
     async firstUpdated() {
@@ -182,14 +190,11 @@ export class CharacterList extends LitElement {
 
     _renderCharacters() {
         if (this.loading) {
-            return Array.from(
-                { length: this._getSkeletonCount() },
-                () => html`<character-card-skeleton></character-card-skeleton>`
-            );
+            return html`<app-loader .count=${this._getSkeletonCount()}></app-loader>`;
         }
 
         if (!this.characters.length) {
-            return this._renderEmpty();
+            return html`<app-empty-state .message=${this._getEmptyMessage()}></app-empty-state>`;
         }
 
         return this.characters.map(
@@ -199,22 +204,10 @@ export class CharacterList extends LitElement {
 
     _renderError() {
         return html`
-            <div class="character-list-error" role="alert">
-                <p>No se pudieron cargar los personajes. Por favor, inténtalo de nuevo.</p>
-                <button @click=${this._handleRetry}>Reintentar</button>
-            </div>
-        `;
-    }
-
-    _renderEmpty() {
-        const message = this.showFavoritesOnly
-            ? 'Aún no tienes personajes favoritos. ¡Marca alguno con el corazón!'
-            : `No se encontraron personajes para "${this.searchQuery}".`;
-
-        return html`
-            <div class="character-list-empty" role="status">
-                <p>${message}</p>
-            </div>
+            <app-error
+                message="No se pudieron cargar los personajes. Por favor, inténtalo de nuevo."
+                @retry=${this._handleRetry}
+            ></app-error>
         `;
     }
 

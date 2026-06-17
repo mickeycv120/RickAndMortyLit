@@ -1,6 +1,6 @@
 import { LitElement, html, css } from 'lit-element';
 import './features/characters/components/character-list/character-list.js';
-import './features/characters/components/navbar/navbar.js';
+import './shared/components/app-header/app-header.js';
 import './features/characters/components/hero-section/hero-section.js';
 
 export class AppShell extends LitElement {
@@ -37,10 +37,10 @@ export class AppShell extends LitElement {
     render() {
         return html`
             <header>
-                <navbar-component
+                <app-header
                     @search-change=${this._handleSearchChange}
                     @favorites-filter-change=${this._handleFavoritesFilterChange}
-                ></navbar-component>
+                ></app-header>
             </header>
             <main>
                 <hero-section></hero-section>
