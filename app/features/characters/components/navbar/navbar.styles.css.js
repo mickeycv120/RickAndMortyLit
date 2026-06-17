@@ -102,6 +102,7 @@ export const navbarStyles = css`
     }
 
     .favorites-btn {
+        position: relative;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -131,6 +132,22 @@ export const navbarStyles = css`
         box-shadow: 0 0 0 3px rgba(151, 206, 76, 0.25);
     }
 
+    .favorites-btn.is-active {
+        border-color: rgba(255, 107, 125, 0.6);
+        background-color: rgba(255, 107, 125, 0.12);
+        box-shadow: 0 0 16px rgba(255, 107, 125, 0.25);
+    }
+
+    .favorites-btn.is-active:hover {
+        border-color: rgba(255, 107, 125, 0.8);
+        background-color: rgba(255, 107, 125, 0.2);
+        box-shadow: 0 0 20px rgba(255, 107, 125, 0.35);
+    }
+
+    .favorites-btn.is-active:focus-visible {
+        box-shadow: 0 0 0 3px rgba(255, 107, 125, 0.3);
+    }
+
     .heart-icon {
         width: 22px;
         height: 22px;
@@ -148,6 +165,38 @@ export const navbarStyles = css`
         fill: rgba(125, 255, 141, 0.35);
         stroke: #7dff8d;
         filter: drop-shadow(0 0 10px rgba(125, 255, 141, 0.6));
+    }
+
+    .favorites-btn.is-active .heart-icon {
+        fill: #ff6b7d;
+        stroke: #ff6b7d;
+        filter: drop-shadow(0 0 8px rgba(255, 107, 125, 0.7));
+    }
+
+    .favorites-btn.is-active:hover .heart-icon {
+        fill: #ff8a96;
+        stroke: #ff8a96;
+        filter: drop-shadow(0 0 12px rgba(255, 107, 125, 0.85));
+    }
+
+    .favorites-badge {
+        position: absolute;
+        top: -4px;
+        right: -4px;
+        min-width: 18px;
+        height: 18px;
+        padding: 0 4px;
+        border-radius: 999px;
+        background: #ff6b7d;
+        border: 2px solid #02030a;
+        color: #fff;
+        font-size: 0.65rem;
+        font-weight: 700;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
     }
 
     @media (max-width: 640px) {

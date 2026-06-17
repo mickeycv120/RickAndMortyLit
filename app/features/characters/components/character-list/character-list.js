@@ -1,7 +1,8 @@
 import { LitElement, html } from 'lit-element';
-import { mapCharactersResponse } from '../../mappers/character.mapper.js';
-import { getCharacters } from '../../services/character.service';
+import { mapCharactersResponse, mapCharacters } from '../../mappers/character.mapper.js';
+import { getCharacters, getCharactersByIds } from '../../services/character.service';
 import { PAGINATION } from '../../../../core/constants/app.constants.js';
+import { favoritesStore, FAVORITES_CHANGED_EVENT } from '../../../../core/stores/favorites.store.js';
 import '../character-card/character-card.js';
 import '../character-card-skeleton/character-card-skeleton.js';
 import '../character-pagination/character-pagination.js';
@@ -21,6 +22,8 @@ export class CharacterList extends LitElement {
         error: { type: Boolean },
         pendingPage: {},
         selectedCharacter: { type: Object },
+        searchQuery: { type: String },
+        showFavoritesOnly: { type: Boolean },
     };
 
     constructor() {
@@ -34,7 +37,37 @@ export class CharacterList extends LitElement {
         this.error = false;
         this.pendingPage = null;
         this.selectedCharacter = null;
+        this.searchQuery = '';
+        this.showFavoritesOnly = false;
         this._loadRequestId = 0;
+        this._onFavoritesChanged = this._onFavoritesChanged.bind(this);
+    }
+
+    connectedCallback() {
+        super.connectedCallback();
+        window.addEventListener(FAVORITES_CHANGED_EVENT, this._onFavoritesChanged);
+    }
+
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        window.removeEventListener(FAVORITES_CHANGED_EVENT, this._onFavoritesChanged);
+    }
+
+    _onFavoritesChanged() {
+        if (this.showFavoritesOnly) {
+            this.characters = this.characters.filter((c) => favoritesStore.isFavorite(c.id));
+        }
+    }
+
+    updated(changedProperties) {
+        const searchChanged = changedProperties.has('searchQuery') &&
+            changedProperties.get('searchQuery') !== undefined;
+        const favoritesFilterChanged = changedProperties.has('showFavoritesOnly') &&
+            changedProperties.get('showFavoritesOnly') !== undefined;
+
+        if (searchChanged || favoritesFilterChanged) {
+            this._loadPage(1);
+        }
     }
 
     _applyResponse(response, page) {
@@ -57,6 +90,10 @@ export class CharacterList extends LitElement {
     }
 
     async _loadPage(page) {
+        if (this.showFavoritesOnly) {
+            return this._loadFavorites();
+        }
+
         const requestId = ++this._loadRequestId;
 
         this.loading = true;
@@ -64,7 +101,7 @@ export class CharacterList extends LitElement {
         this.pendingPage = page;
 
         try {
-            const response = await getCharacters(page);
+            const response = await getCharacters(page, this.searchQuery);
 
             if (requestId !== this._loadRequestId) return;
 
@@ -72,11 +109,61 @@ export class CharacterList extends LitElement {
         } catch (err) {
             if (requestId !== this._loadRequestId) return;
 
-            this.error = true;
+            if (err.response?.status === 404) {
+                this.characters = [];
+                this.currentPage = page;
+                this.totalPages = 1;
+                this.hasNext = false;
+                this.hasPrev = false;
+            } else {
+                this.error = true;
+            }
         } finally {
             if (requestId === this._loadRequestId) {
                 this.loading = false;
                 this.pendingPage = null;
+            }
+        }
+    }
+
+    async _loadFavorites() {
+        const requestId = ++this._loadRequestId;
+
+        this.loading = true;
+        this.error = false;
+        this.pendingPage = null;
+
+        const ids = favoritesStore.getAll();
+
+        if (!ids.length) {
+            if (requestId === this._loadRequestId) {
+                this.characters = [];
+                this.currentPage = 1;
+                this.totalPages = 1;
+                this.hasNext = false;
+                this.hasPrev = false;
+                this.loading = false;
+            }
+            return;
+        }
+
+        try {
+            const response = await getCharactersByIds(ids);
+
+            if (requestId !== this._loadRequestId) return;
+
+            const results = Array.isArray(response) ? response : [response];
+            this.characters = mapCharacters(results);
+            this.currentPage = 1;
+            this.totalPages = 1;
+            this.hasNext = false;
+            this.hasPrev = false;
+        } catch (err) {
+            if (requestId !== this._loadRequestId) return;
+            this.error = true;
+        } finally {
+            if (requestId === this._loadRequestId) {
+                this.loading = false;
             }
         }
     }
@@ -101,6 +188,10 @@ export class CharacterList extends LitElement {
             );
         }
 
+        if (!this.characters.length) {
+            return this._renderEmpty();
+        }
+
         return this.characters.map(
             (character) => html`<character-card .character=${character}></character-card>`
         );
@@ -111,6 +202,18 @@ export class CharacterList extends LitElement {
             <div class="character-list-error" role="alert">
                 <p>No se pudieron cargar los personajes. Por favor, inténtalo de nuevo.</p>
                 <button @click=${this._handleRetry}>Reintentar</button>
+            </div>
+        `;
+    }
+
+    _renderEmpty() {
+        const message = this.showFavoritesOnly
+            ? 'Aún no tienes personajes favoritos. ¡Marca alguno con el corazón!'
+            : `No se encontraron personajes para "${this.searchQuery}".`;
+
+        return html`
+            <div class="character-list-empty" role="status">
+                <p>${message}</p>
             </div>
         `;
     }
@@ -131,15 +234,17 @@ export class CharacterList extends LitElement {
             >
                 ${this.error ? this._renderError() : this._renderCharacters()}
             </section>
-            <character-pagination
-                .currentPage=${this.currentPage}
-                .totalPages=${this.totalPages}
-                .hasNext=${this.hasNext}
-                .hasPrev=${this.hasPrev}
-                .loading=${this.loading}
-                .pendingPage=${this.pendingPage}
-                @page-change=${this._handlePageChange}
-            ></character-pagination>
+            ${!this.showFavoritesOnly
+                ? html`<character-pagination
+                      .currentPage=${this.currentPage}
+                      .totalPages=${this.totalPages}
+                      .hasNext=${this.hasNext}
+                      .hasPrev=${this.hasPrev}
+                      .loading=${this.loading}
+                      .pendingPage=${this.pendingPage}
+                      @page-change=${this._handlePageChange}
+                  ></character-pagination>`
+                : ''}
         `;
     }
 

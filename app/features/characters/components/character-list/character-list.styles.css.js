@@ -61,4 +61,20 @@ export const characterListStyles = css`
     .character-list-error button:hover {
         background: rgba(151, 206, 76, 0.2);
     }
+
+    .character-list-empty {
+        grid-column: 1 / -1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 3rem 2rem;
+        color: rgba(207, 233, 255, 0.55);
+        text-align: center;
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+
+    .character-list-empty p {
+        margin: 0;
+    }
 `;

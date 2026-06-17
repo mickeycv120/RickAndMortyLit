@@ -54,9 +54,75 @@ export const characterCardStyles = css`
     }
 
     .media {
+        position: relative;
         flex-shrink: 0;
         height: 280px;
         overflow: hidden;
+    }
+
+    .favorite-btn {
+        position: absolute;
+        top: 0.625rem;
+        right: 0.625rem;
+        z-index: 3;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        padding: 0;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 50%;
+        background: rgba(2, 3, 10, 0.55);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        color: rgba(255, 255, 255, 0.45);
+        cursor: pointer;
+        transition:
+            color 0.2s ease,
+            background 0.2s ease,
+            border-color 0.2s ease,
+            transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .favorite-btn svg {
+        width: 16px;
+        height: 16px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        transition: fill 0.2s ease, stroke 0.2s ease;
+    }
+
+    .favorite-btn:hover {
+        color: #ff6b7d;
+        border-color: rgba(255, 107, 125, 0.5);
+        background: rgba(255, 107, 125, 0.12);
+        transform: scale(1.12);
+    }
+
+    .favorite-btn:focus-visible {
+        outline: 2px solid rgba(255, 107, 125, 0.7);
+        outline-offset: 2px;
+    }
+
+    .favorite-btn.is-favorite {
+        color: #ff6b7d;
+        border-color: rgba(255, 107, 125, 0.55);
+        background: rgba(255, 107, 125, 0.15);
+    }
+
+    .favorite-btn.is-favorite svg {
+        fill: #ff6b7d;
+        stroke: #ff6b7d;
+        filter: drop-shadow(0 0 6px rgba(255, 107, 125, 0.7));
+    }
+
+    .favorite-btn.is-favorite:hover {
+        background: rgba(255, 107, 125, 0.22);
+        transform: scale(1.12);
     }
 
     img {

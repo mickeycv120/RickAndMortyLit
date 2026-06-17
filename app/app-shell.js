@@ -15,15 +15,40 @@ export class AppShell extends LitElement {
         `
     ];
 
+    static properties = {
+        searchQuery: { type: String },
+        showFavoritesOnly: { type: Boolean },
+    };
+
+    constructor() {
+        super();
+        this.searchQuery = '';
+        this.showFavoritesOnly = false;
+    }
+
+    _handleSearchChange(event) {
+        this.searchQuery = event.detail.query;
+    }
+
+    _handleFavoritesFilterChange(event) {
+        this.showFavoritesOnly = event.detail.active;
+    }
+
     render() {
         return html`
-         <header>
-            <navbar-component></navbar-component>
-        </header>
-        <main>
-            <hero-section></hero-section>
-            <character-list></character-list>
-        </main>
+            <header>
+                <navbar-component
+                    @search-change=${this._handleSearchChange}
+                    @favorites-filter-change=${this._handleFavoritesFilterChange}
+                ></navbar-component>
+            </header>
+            <main>
+                <hero-section></hero-section>
+                <character-list
+                    .searchQuery=${this.searchQuery}
+                    .showFavoritesOnly=${this.showFavoritesOnly}
+                ></character-list>
+            </main>
         `;
     }
 }
