@@ -25,6 +25,12 @@ export const characterCardStyles = css`
             transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
             box-shadow 0.3s ease,
             border-color 0.3s ease;
+        cursor: pointer;
+    }
+
+    article:focus-visible {
+        outline: 2px solid rgba(151, 206, 76, 0.8);
+        outline-offset: 3px;
     }
 
     article:hover {

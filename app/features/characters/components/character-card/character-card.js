@@ -14,6 +14,23 @@ export class CharacterCard extends LitElement {
         this.character = {};
     }
 
+    _handleClick() {
+        this.dispatchEvent(
+            new CustomEvent('character-select', {
+                detail: { character: this.character },
+                bubbles: true,
+                composed: true,
+            })
+        );
+    }
+
+    _handleKeydown(event) {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            this._handleClick();
+        }
+    }
+
     render() {
 
         if (!this.character) {
@@ -24,7 +41,13 @@ export class CharacterCard extends LitElement {
         const { color = DEFAULT_STATUS_COLOR, label = status } = CHARACTER_STATUS_CONFIG[status] ?? {};
 
         return html`
-        <article>
+        <article
+            @click=${this._handleClick}
+            @keydown=${this._handleKeydown}
+            tabindex="0"
+            role="button"
+            aria-label="Ver detalles de ${name}"
+        >
             <div class="media">
                 <img src="${image}" alt="${name}" loading="lazy" />
             </div>

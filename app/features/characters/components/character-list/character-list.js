@@ -5,6 +5,7 @@ import { PAGINATION } from '../../../../core/constants/app.constants.js';
 import '../character-card/character-card.js';
 import '../character-card-skeleton/character-card-skeleton.js';
 import '../character-pagination/character-pagination.js';
+import '../character-modal/character-modal.js';
 import { characterListStyles } from './character-list.styles.css.js';
 
 export class CharacterList extends LitElement {
@@ -19,6 +20,7 @@ export class CharacterList extends LitElement {
         loading: { type: Boolean },
         error: { type: Boolean },
         pendingPage: {},
+        selectedCharacter: { type: Object },
     };
 
     constructor() {
@@ -31,6 +33,7 @@ export class CharacterList extends LitElement {
         this.loading = false;
         this.error = false;
         this.pendingPage = null;
+        this.selectedCharacter = null;
         this._loadRequestId = 0;
     }
 
@@ -82,6 +85,14 @@ export class CharacterList extends LitElement {
         this._loadPage(this.currentPage);
     }
 
+    _handleCharacterSelect(event) {
+        this.selectedCharacter = event.detail.character;
+    }
+
+    _handleModalClose() {
+        this.selectedCharacter = null;
+    }
+
     _renderCharacters() {
         if (this.loading) {
             return Array.from(
@@ -106,10 +117,17 @@ export class CharacterList extends LitElement {
 
     render() {
         return html`
+            ${this.selectedCharacter
+                ? html`<character-modal
+                      .character=${this.selectedCharacter}
+                      @modal-close=${this._handleModalClose}
+                  ></character-modal>`
+                : ''}
             <section
                 class="character-list ${this.loading ? 'is-loading' : ''}"
                 aria-busy=${this.loading}
                 aria-live="polite"
+                @character-select=${this._handleCharacterSelect}
             >
                 ${this.error ? this._renderError() : this._renderCharacters()}
             </section>

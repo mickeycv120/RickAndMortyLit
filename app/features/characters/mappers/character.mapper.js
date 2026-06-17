@@ -8,8 +8,12 @@ export function mapCharacter(apiCharacter) {
         name: apiCharacter.name,
         status: apiCharacter.status,
         species: apiCharacter.species,
+        type: apiCharacter.type ?? '',
+        gender: apiCharacter.gender ?? '',
         image: apiCharacter.image,
         origin: apiCharacter.origin?.name ?? apiCharacter.origin,
+        location: apiCharacter.location?.name ?? apiCharacter.location,
+        episodeCount: apiCharacter.episode?.length ?? 0,
     };
 }
 
