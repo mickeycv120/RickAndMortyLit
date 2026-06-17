@@ -1,5 +1,6 @@
 import { LitElement, html } from 'lit-element';
 import { characterCardStyles } from './character-card.styles.css.js';
+import { CHARACTER_STATUS_CONFIG, DEFAULT_STATUS_COLOR } from '../../../../core/constants/app.constants.js';
 
 export class CharacterCard extends LitElement {
     static styles = [characterCardStyles];
@@ -13,17 +14,6 @@ export class CharacterCard extends LitElement {
         this.character = {};
     }
 
-    get statusColor() {
-        switch (this.character.status) {
-            case 'Alive':
-                return '#7dff8d';
-            case 'Dead':
-                return '#ff6b7d';
-            default:
-                return '#b6c2d2';
-        }
-    }
-
     render() {
 
         if (!this.character) {
@@ -31,6 +21,7 @@ export class CharacterCard extends LitElement {
         }
 
         const { name, status, image, species, origin } = this.character;
+        const { color = DEFAULT_STATUS_COLOR, label = status } = CHARACTER_STATUS_CONFIG[status] ?? {};
 
         return html`
         <article>
@@ -43,7 +34,7 @@ export class CharacterCard extends LitElement {
                     <span>${species}</span>
                     <span>${origin?.name ?? origin}</span>
                 </p>
-                <span class="status" style="color: ${this.statusColor};">${status}</span>
+                <span class="status" style="color: ${color};">${label}</span>
             </div>
         </article>
         `;
