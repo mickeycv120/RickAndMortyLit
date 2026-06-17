@@ -12,3 +12,19 @@ export function mapCharacter(apiCharacter) {
         origin: apiCharacter.origin?.name ?? apiCharacter.origin,
     };
 }
+
+export function mapCharacters(apiCharacters = []) {
+    return apiCharacters.map(mapCharacter).filter(Boolean);
+}
+
+export function mapCharactersResponse(apiResponse, page = 1) {
+    const { results = [], info = {} } = apiResponse ?? {};
+
+    return {
+        characters: mapCharacters(results),
+        currentPage: page,
+        totalPages: info.pages ?? 1,
+        hasNext: Boolean(info.next),
+        hasPrev: Boolean(info.prev),
+    };
+}

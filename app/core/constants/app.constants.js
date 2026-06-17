@@ -11,6 +11,11 @@ export const PAGINATION = {
     DEFAULT_PAGE_SIZE: 20,
 }
 
+export const RETRY = {
+    MAX_RETRIES: 3,
+    BASE_DELAY_MS: 1000,
+}
+
 export const MESSAGES = {
     FETCH_ERROR: 'An error occurred while fetching characters. Please try again later.',
     CHARACTER_NOT_FOUND: 'Character not found',
